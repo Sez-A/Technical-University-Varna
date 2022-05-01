@@ -22,9 +22,12 @@ public class TableFiller {
         int rowCnt = 0;
         while (scanner.hasNextLine()) {
             String[] tokens = scanner.nextLine().split(", ");
-            // TODO Check for way to replace commas like these ",,," with just empty cells in table
             for (int i = 0; i < tokens.length; i++) {
-                fill(table, rowCnt, tokens[i].trim());
+                String cellInfo = tokens[i].trim();
+                if (cellInfo.contains("\\\"")) {
+                    cellInfo = cellInfo.replace("\\\"", "");
+                }
+                fill(table, rowCnt, cellInfo);
             }
             rowCnt++;
         }

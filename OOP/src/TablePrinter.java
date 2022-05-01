@@ -8,10 +8,12 @@ public class TablePrinter {
             List<ArrayList<String>> content = table.getContent();
             ArrayList<String> currentRow = content.get(i);
             for (int j = 0; j < currentRow.size(); j++) {
-                if(currentRow.get(j).isEmpty()) {
+                if (currentRow.get(j).isEmpty()) {
                     continue;
-                }
-                System.out.print(currentRow.get(j) + " | ");
+                } else if (currentRow.get(j).contains(",")) {
+                    System.out.print(currentRow.get(j).replace(",", " | "));
+                } else
+                    System.out.print(currentRow.get(j) + " | ");
             }
             System.out.println();
         }
