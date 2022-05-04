@@ -7,8 +7,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TableFiller {
-    private final String VALID_STRING_PATTERN = "^\"[A-Za-z]+\"$";
-    private final String VALID_NUMBER_PATTERN = "^-*[0-9]+.*[\\d+*]$";
+    private final String VALID_STRING_PATTERN = "^\"[A-Za-z]+.*\"$";
+    private final String VALID_NUMBER_PATTERN = "^-*[0-9]+.{0,1}[\\d+]*$";
     private final String VALID_FORMULA_PATTERN = "^= ([\\d]+)*([A-Z][\\d]+[A-Z][\\d]+)* [+\\-*\\/] ([\\d]+)*([A-Z][\\d]+[A-Z][\\d]+)*$";
 
     public void fill(Table table, int row, String info) {
@@ -35,11 +35,19 @@ public class TableFiller {
             }
             for (int i = 0; i < tokens.length; i++) {
                 String cellInfo = tokens[i].trim();
-                if (inputIsInvalid(cellInfo)) {
-                    // TODO: 5/3/2022 Throw appropriate exception
+                if(cellInfo.isEmpty()) {
+                    fill(table,rowCnt,cellInfo);
+                    continue;
                 }
                 if (cellInfo.contains("\\\"")) {
                     cellInfo = cellInfo.replace("\\\"", "");
+                }
+//                }else if(cellInfo.contains("\"")) {
+//                    cellInfo = cellInfo.replace("\"", "");
+//                }
+                if (!validInput(cellInfo)) {
+                    throw new InvalidInput(String.format("Error: row %d, %s is unknown data type",
+                            rowCnt, cellInfo));
                 }
                 fill(table, rowCnt, cellInfo);
             }
@@ -47,8 +55,25 @@ public class TableFiller {
         }
     }
 
-    private boolean inputIsInvalid(String data) {
-        // TODO Check whether data is valid!
-        return false;
+    private boolean validInput(String data) {
+        Pattern pattern
+                = Pattern.compile(VALID_STRING_PATTERN);
+        Matcher matcher
+                = pattern.matcher(data);
+        boolean invalidInput = matcher.matches();
+        if (!invalidInput) {
+            pattern = Pattern.compile(VALID_NUMBER_PATTERN);
+            matcher = pattern.matcher(data);
+            invalidInput = matcher.matches();
+            if(!invalidInput) {
+                pattern = Pattern.compile(VALID_FORMULA_PATTERN);
+                matcher = pattern.matcher(data);
+                invalidInput = matcher.matches();
+                if(!invalidInput) {
+                    return false;
+                }
+            }
+        }
+        return true;
     }
 }
