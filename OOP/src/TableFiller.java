@@ -20,8 +20,8 @@ public class TableFiller {
         }
     }
 
-    public void fillTableFromFile(String filePath, Table table) throws IOException {
-        File file = new File(filePath);
+    public void fillTableFromFile(File file, Table table) throws IOException {
+        // File file = new File(filePath);
 
         Scanner scanner = new Scanner(file);
 
@@ -35,16 +35,13 @@ public class TableFiller {
             }
             for (int i = 0; i < tokens.length; i++) {
                 String cellInfo = tokens[i].trim();
-                if(cellInfo.isEmpty()) {
-                    fill(table,rowCnt,cellInfo);
+                if (cellInfo.isEmpty()) {
+                    fill(table, rowCnt, cellInfo);
                     continue;
                 }
                 if (cellInfo.contains("\\\"")) {
                     cellInfo = cellInfo.replace("\\\"", "");
                 }
-//                }else if(cellInfo.contains("\"")) {
-//                    cellInfo = cellInfo.replace("\"", "");
-//                }
                 if (!validInput(cellInfo)) {
                     throw new InvalidInput(String.format("Error: row %d, %s is unknown data type",
                             rowCnt, cellInfo));
@@ -65,11 +62,11 @@ public class TableFiller {
             pattern = Pattern.compile(VALID_NUMBER_PATTERN);
             matcher = pattern.matcher(data);
             invalidInput = matcher.matches();
-            if(!invalidInput) {
+            if (!invalidInput) {
                 pattern = Pattern.compile(VALID_FORMULA_PATTERN);
                 matcher = pattern.matcher(data);
                 invalidInput = matcher.matches();
-                if(!invalidInput) {
+                if (!invalidInput) {
                     return false;
                 }
             }

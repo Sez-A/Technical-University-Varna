@@ -1,5 +1,8 @@
+import java.io.FileNotFoundException;
+import java.io.IOException;
+
 public interface TableOperations {
-    void open(String filePath);
+    String open(String filePath, Table table) throws IOException;
 
     void close();
 
