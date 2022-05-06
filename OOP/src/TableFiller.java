@@ -21,10 +21,8 @@ public class TableFiller {
     }
 
     public void fillTableFromFile(File file, Table table) throws IOException {
-        // File file = new File(filePath);
-
         Scanner scanner = new Scanner(file);
-
+        table.setFileName(file.getName());
         int rowCnt = 0;
         while (scanner.hasNextLine()) {
             String[] tokens = scanner.nextLine().trim().split(",");

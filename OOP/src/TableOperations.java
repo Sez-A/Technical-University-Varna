@@ -6,13 +6,9 @@ public interface TableOperations {
 
     void close();
 
-    void save();
+    String save(Table table) throws IOException;
 
-    void saveAs(String filePath);
+    String saveAs(String filePath, Table table) throws IOException;
 
     void edit();
-
-    void help();
-
-    void exit();
 }

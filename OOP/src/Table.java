@@ -2,6 +2,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Table {
+    private String fileName;
     private List<ArrayList<String>> content;
 
     public Table() {
@@ -10,5 +11,13 @@ public class Table {
 
     public List<ArrayList<String>> getContent() {
         return content;
+    }
+
+    public String getFileName() {
+        return fileName;
+    }
+
+    public void setFileName(String fileName) {
+        this.fileName = fileName;
     }
 }
