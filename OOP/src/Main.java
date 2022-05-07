@@ -27,12 +27,13 @@ public class Main {
                     break;
                 case "edit":
                     try {
-                        tableOperations.edit(Integer.parseInt(tokens[1]),
+                        System.out.println(tableOperations.edit(Integer.parseInt(tokens[1]),
                                 Integer.parseInt(tokens[2]),
                                 tokens[3],
-                                table);
-                    } catch (InvalidInput e) {
+                                table));
+                    } catch (InvalidInput | IndexOutOfBoundsException e) {
                         System.err.println(e.getMessage());
+                        System.out.println();
                     }
                     break;
                 case "print":

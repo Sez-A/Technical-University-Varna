@@ -10,5 +10,5 @@ public interface TableOperations {
 
     String saveAs(String filePath, Table table) throws IOException;
 
-    void edit(int tableRowFromClient, int tableColFromClient, String newDataForCell, Table table);
+    String edit(int tableRowFromClient, int tableColFromClient, String newDataForCell, Table table);
 }

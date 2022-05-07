@@ -67,15 +67,23 @@ public class TableOperationsImpl implements TableOperations {
     }
 
     @Override
-    public void edit(int tableRowFromClient, int tableColFromClient, String newDataForCell, Table table) {
+    public String edit(int tableRowFromClient, int tableColFromClient, String newDataForCell, Table table) {
         if (!infoValidator.validInput(newDataForCell)) {
             throw new InvalidInput(String.format("Error: %s is unknown data type",
                     newDataForCell));
         }
         int actualTableRow = tableRowFromClient - 1;
         int actualTableCol = tableColFromClient - 1;
+        if (actualTableRow > table.getContent().size()) {
+            throw new IndexOutOfBoundsException(String.format("Row %d is not exist in table! Table have only %d rows"
+                    , tableRowFromClient,
+                    table.getContent().size()));
+        }
         ArrayList<String> currentRow = table.getContent().get(actualTableRow);
         currentRow.remove(actualTableCol);
         currentRow.add(actualTableCol, newDataForCell);
+
+        return String.format("Table successfully edited! In row %d and col %d now data is: %s",
+                tableRowFromClient, tableColFromClient, newDataForCell);
     }
 }

@@ -48,5 +48,49 @@ public class TableFiller {
             }
             rowCnt++;
         }
+
+        arrangeTable(table);
+    }
+
+    private void arrangeTable(Table table) {
+        for (ArrayList<String> currentRow : table.getContent()) {
+            if (allCellsInRowIsEmpty(currentRow)) {
+                fillEmptyRowWithMaxCellCountInTable(maxCellCountInTable(table), currentRow);
+            } else {
+                arrangeRow(currentRow, maxCellCountInTable(table));
+            }
+        }
+    }
+
+    private void arrangeRow(ArrayList<String> currentRow, int maxCellCountInTable) {
+        for (int i = currentRow.size(); i < maxCellCountInTable; i++) {
+            currentRow.add(i, "");
+        }
+    }
+
+    private boolean allCellsInRowIsEmpty(ArrayList<String> currentRow) {
+        for (String dataInCell : currentRow) {
+            if (!dataInCell.isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private int maxCellCountInTable(Table table) {
+        int maxCellCount = -1;
+        for (ArrayList<String> row : table.getContent()) {
+            if (row.size() > maxCellCount) {
+                maxCellCount = row.size();
+            }
+        }
+        return maxCellCount;
+    }
+
+    private void fillEmptyRowWithMaxCellCountInTable(int maxCellCountInTable, ArrayList<String> currentRow) {
+        currentRow.clear();
+        for (int i = 0; i < maxCellCountInTable; i++) {
+            currentRow.add(i, "");
+        }
     }
 }
