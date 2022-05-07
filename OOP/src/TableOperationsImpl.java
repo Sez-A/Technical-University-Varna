@@ -8,10 +8,13 @@ import java.util.List;
 
 public class TableOperationsImpl implements TableOperations {
     private final TableFiller tableFiller;
+    // TODO For check which operation you can do if file is closed you can only open it again before doing anything else
     private boolean fileIsOpenToManipulations;
+    private final TableInfoValidator infoValidator;
 
-    public TableOperationsImpl(TableFiller tableFiller) {
-        this.tableFiller = tableFiller;
+    public TableOperationsImpl() {
+        this.tableFiller = new TableFiller();
+        this.infoValidator = new TableInfoValidatorImpl();
     }
 
     @Override
@@ -46,10 +49,15 @@ public class TableOperationsImpl implements TableOperations {
             for (int j = 0; j < currentRow.size(); j++) {
                 if (currentRow.get(j).isEmpty()) {
                     continue;
-                } else if (currentRow.get(j).contains(",")) {
+                } else if (currentRow.get(j).contains(" | ")) {
                     builder.append(currentRow.get(j).replace(" | ", ", "));
-                } else
-                    builder.append(currentRow.get(j)).append(", ");
+                } else {
+                    if (j == currentRow.size() - 1) {
+                        builder.append(currentRow.get(j));
+                    } else {
+                        builder.append(currentRow.get(j)).append(", ");
+                    }
+                }
             }
             builder.append(System.lineSeparator());
         }
@@ -59,7 +67,15 @@ public class TableOperationsImpl implements TableOperations {
     }
 
     @Override
-    public void edit() {
-
+    public void edit(int tableRowFromClient, int tableColFromClient, String newDataForCell, Table table) {
+        if (!infoValidator.validInput(newDataForCell)) {
+            throw new InvalidInput(String.format("Error: %s is unknown data type",
+                    newDataForCell));
+        }
+        int actualTableRow = tableRowFromClient - 1;
+        int actualTableCol = tableColFromClient - 1;
+        ArrayList<String> currentRow = table.getContent().get(actualTableRow);
+        currentRow.remove(actualTableCol);
+        currentRow.add(actualTableCol, newDataForCell);
     }
 }

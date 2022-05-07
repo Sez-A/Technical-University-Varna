@@ -5,7 +5,7 @@ public class Main {
     public static void main(String[] args) throws IOException {
         Scanner scan = new Scanner(System.in);
         Table table = new Table();
-        TableOperations tableOperations = new TableOperationsImpl(new TableFiller());
+        TableOperations tableOperations = new TableOperationsImpl();
         System.err.println(("Please pay attention that you pass argument (s)" +
                 " with single space to operations which works with argument (s)").toUpperCase());
         System.err.println("Example: open {single space} filePath");
@@ -23,6 +23,16 @@ public class Main {
                         System.out.println(tableOperations.save(table));
                     } else {
                         System.out.println(tableOperations.saveAs(tokens[2], table));
+                    }
+                    break;
+                case "edit":
+                    try {
+                        tableOperations.edit(Integer.parseInt(tokens[1]),
+                                Integer.parseInt(tokens[2]),
+                                tokens[3],
+                                table);
+                    } catch (InvalidInput e) {
+                        System.err.println(e.getMessage());
                     }
                     break;
                 case "print":

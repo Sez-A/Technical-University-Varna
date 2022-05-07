@@ -3,13 +3,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class TableFiller {
-    private final String VALID_STRING_PATTERN = "^\"[A-Za-z]+.*\"$";
-    private final String VALID_NUMBER_PATTERN = "^-*[0-9]+.{0,1}[\\d+]*$";
-    private final String VALID_FORMULA_PATTERN = "^= ([\\d]+)*([A-Z][\\d]+[A-Z][\\d]+)* [+\\-*\\/] ([\\d]+)*([A-Z][\\d]+[A-Z][\\d]+)*$";
+    private final TableInfoValidator infoValidator;
+
+    public TableFiller() {
+        this.infoValidator = new TableInfoValidatorImpl();
+    }
 
     public void fill(Table table, int row, String info) {
         if (table.getContent().size() == row) {
@@ -40,35 +40,13 @@ public class TableFiller {
                 if (cellInfo.contains("\\\"")) {
                     cellInfo = cellInfo.replace("\\\"", "");
                 }
-                if (!validInput(cellInfo)) {
-                    throw new InvalidInput(String.format("Error: row %d, %s is unknown data type",
-                            rowCnt, cellInfo));
+                if (!infoValidator.validInput(cellInfo)) {
+                    throw new InvalidInput(String.format("Error: At row %d in %s, %s is unknown data type",
+                            rowCnt + 1, file.getName(), cellInfo));
                 }
                 fill(table, rowCnt, cellInfo);
             }
             rowCnt++;
         }
-    }
-
-    private boolean validInput(String data) {
-        Pattern pattern
-                = Pattern.compile(VALID_STRING_PATTERN);
-        Matcher matcher
-                = pattern.matcher(data);
-        boolean invalidInput = matcher.matches();
-        if (!invalidInput) {
-            pattern = Pattern.compile(VALID_NUMBER_PATTERN);
-            matcher = pattern.matcher(data);
-            invalidInput = matcher.matches();
-            if (!invalidInput) {
-                pattern = Pattern.compile(VALID_FORMULA_PATTERN);
-                matcher = pattern.matcher(data);
-                invalidInput = matcher.matches();
-                if (!invalidInput) {
-                    return false;
-                }
-            }
-        }
-        return true;
     }
 }
